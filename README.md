@@ -120,7 +120,7 @@ O desenvolvimento encontra-se organizado em quatro sprints.
 
 | Sprint | Período previsto | Objetivos |
 |---|---|---|
-| Sprint 1 | Até 13/11/2026 | Análise de requisitos, arquitetura e planeamento. |
+| Sprint 1 | Até 15/11/2026 | Análise de requisitos, arquitetura e planeamento. |
 | Sprint 2 | 26–27/11/2026 | Desenvolvimento do primeiro protótipo funcional. |
 | Sprint 3 | 07–11/12/2026 | Implementação das dificuldades, interface e testes. |
 | Sprint 4 | Até 08/01/2027 | Finalização, documentação e preparação da apresentação. |
