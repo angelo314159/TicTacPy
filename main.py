@@ -1,97 +1,70 @@
-from random import randrange
+import json
+import random
+from datetime import datetime
+from pathlib import Path
+from cli.cli import * 
+from dificuldades.dificuldades import *
+from persistência_De_Dados.persistência_de_dados import * 
+from regras_e_tabuleiro.regras_e_tabuleiro import *
+
+def jogar_partida(dificuldade):
+    tabuleiro = criar_tabuleiro()
+    simbolo_humano = "X"
+    simbolo_pc = "O"
+    turno = "humano"
+
+    print(f"\nInício da partida - dificuldade {dificuldade}.")
+    print("Tu jogas com X; o computador joga com O.")
+    mostrar_tabuleiro(tabuleiro)
+
+    while True:
+        if turno == "humano":
+            posicao = pedir_jogada_humano()
+            if not aplicar_jogada(tabuleiro, posicao, simbolo_humano):
+                print("Essa casa já está ocupada. Escolhe outra.")
+                continue
+            turno = "computador"
+        else:
+            posicao = escolher_jogada(tabuleiro, dificuldade, simbolo_pc, simbolo_humano)
+            if posicao is not None:
+                aplicar_jogada(tabuleiro, posicao, simbolo_pc)
+                print("O computador jogou na casa", posicao + 1)
+            turno = "humano"
+
+        mostrar_tabuleiro(tabuleiro)
+        resultado = verificar_vencedor(tabuleiro)
+        if resultado is not None:
+            if resultado == simbolo_humano:
+                print("Parabéns! Ganhaste!")
+                guardar_partida("humano", dificuldade)
+            elif resultado == simbolo_pc:
+                print("O computador ganhou!")
+                guardar_partida("computador", dificuldade)
+            else:
+                print("Empate!")
+                guardar_partida("empate", dificuldade)
+            break
 
 
-def display_board(board):
-	print("+-------" * 3,"+", sep="")
-	for row in range(3):
-		print("|       " * 3,"|", sep="")
-		for col in range(3):
-			print("|   " + str(board[row][col]) + "   ", end="")
-		print("|")
-		print("|       " * 3,"|",sep="")
-		print("+-------" * 3,"+",sep="")
+def main():
+    while True:
+        opcao = menu_principal()
+        if opcao == "1":
+            dados = carregar_dados()
+            anterior = dados["preferencias"].get("dificuldade", "facil")
+            if anterior not in ("facil", "medio"):
+                anterior = "facil"
+            dificuldade = escolher_dificuldade(anterior)
+            guardar_preferencia(dificuldade)
+            jogar_partida(dificuldade)
+        elif opcao == "2":
+            mostrar_estatisticas()
+        elif opcao == "3":
+            print("Até à próxima no TicTacPy!")
+            break
+        else:
+            print("Opção inválida. Escolhe 1, 2 ou 3.")
 
 
-def enter_move(board):
-	ok = False	
-	while not ok:
-		move = input("Digite seu movimento: ") 
-		ok = len(move) == 1 and move >= '1' and move <= '9' 
-		if not ok:
-			print("Má jogada – repita sua entrada!") 
-			continue
-		move = int(move) - 1 	
-		row = move // 3 	
-		col = move % 3		
-		sign = board[row][col]	
-		ok = sign not in ['O','X'] 
-		if not ok:	
-			print("Campo já ocupado – repita sua entrada!")
-			continue
-	board[row][col] = 'O' 	
-
-
-def make_list_of_free_fields(board):
-	free = []	
-	for row in range(3): 
-		for col in range(3): 
-			if board[row][col] not in ['O','X']:
-				free.append((row,col)) 
-	return free
-
-
-def victory_for(board,sgn):
-	if sgn == "X":	
-		who = 'me'	
-	elif sgn == "O": 
-		who = 'you'	
-	else:
-		who = None	
-	cross1 = cross2 = True  
-	for rc in range(3):
-		if board[rc][0] == sgn and board[rc][1] == sgn and board[rc][2] == sgn:	
-			return who
-		if board[0][rc] == sgn and board[1][rc] == sgn and board[2][rc] == sgn: 
-			return who
-		if board[rc][rc] != sgn: 
-			cross1 = False
-		if board[2 - rc][2 - rc] != sgn: 
-			cross2 = False
-	if cross1 or cross2:
-		return who
-	return None
-
-
-def draw_move(board):
-	free = make_list_of_free_fields(board)
-	cnt = len(free)
-	if cnt > 0:	
-		this = randrange(cnt)
-		row, col = free[this]
-		board[row][col] = 'X'
-
-
-board = [ [3 * j + i + 1 for i in range(3)] for j in range(3) ] 
-board[1][1] = 'X' 
-free = make_list_of_free_fields(board)
-human_turn = True 
-while len(free):
-	display_board(board)
-	if human_turn:
-		enter_move(board)
-		victor = victory_for(board,'O')
-	else:	
-		draw_move(board)
-		victor = victory_for(board,'X')
-	if victor != None:
-		break
-	human_turn = not human_turn		
-	free = make_list_of_free_fields(board)
-
-display_board(board)
-if victor == 'you':
-	print("You won!")
-elif victor == 'me':
-	print("I won")
-else:
-	print("Tie!")
+if __name__ == "__main__":
+    main()
