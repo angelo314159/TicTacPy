@@ -1,4 +1,4 @@
-from regras_e_tabuleiro.regras_e_tabuleirov import *
+from regras_e_tabuleiro.regras_e_tabuleiro import *
 
 def jogada_aleatoria(tabuleiro):
     livres = obter_posicoes_livres(tabuleiro)
