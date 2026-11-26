@@ -1,5 +1,5 @@
 import json
-import random
+from pathlib import Path
 from datetime import datetime
 
 FICHEIRO_DADOS = Path(__file__).resolve().parent / "tictacpy_dados.json"
