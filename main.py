@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from cli.cli import * 
 from dificuldades.dificuldades import *
-from persistência_De_Dados.persistência_de_dados import * 
+from persistência_De_Dados.persistencia_de_dados import * 
 from regras_e_tabuleiro.regras_e_tabuleiro import *
 
 def jogar_partida(dificuldade):
