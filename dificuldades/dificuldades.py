@@ -1,3 +1,4 @@
+import random
 from regras_e_tabuleiro.regras_e_tabuleiro import *
 
 def jogada_aleatoria(tabuleiro):
